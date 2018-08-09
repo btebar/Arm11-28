@@ -1,0 +1,106 @@
+\documentclass[a4paper, twoside]{report}
+
+%% Language and font encodings
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{listings}
+\usepackage{multicol}
+
+%% Sets page size and margins
+\usepackage[a4paper,top=3cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+
+%% Useful packages
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+
+\title{Project Title}
+\author{John Smith}
+% Update supervisor and other title stuff in title/title.tex
+
+\begin{document}
+\input{title/title.tex}
+
+%\chapter{Group Organization}
+
+\section*{1. Group Organization}
+
+\subsection*{1.1 Task Sharing}
+We decided to split the emulator into its four main functions, with each of us implementing one of the instructions \verb|Multiply, Branch, Data Processing, Single Data Transfer|. The main advantage of working in this manner was that we were able to discuss the working of each of these instructions in detail before implementing the main file, \verb|emulate.c|. \\
+We started off by writing a skeleton file, which we then added to, corrected and debugged when someone was done with their implementation. This ensured that each section of code was seen by more than one pair of eyes while parallelizing our work and ensuring that every group member understood each part.
+
+
+\subsection*{1.2 Co-ordination}
+In order to co-ordinate our project and working efficiently, we use multiple project management applications. Apart from using git(lab) for repository management, we use a Messenger group to share links and pictures. In addition, we use a Trello group with multiple boards to collect ideas, note down tasks, requirements and deadlines, and also a shared Google Drive which allows us to work on reports simultaneously.  Extensive comments have often helped us detect and fix broken code, and have contributed to the general understandability of the project. 
+
+\section*{}
+
+
+\section*{2. Working as a group}
+
+The main problems we faced initially repository management and working with CLion. Working with git with limited prior exposure and multiple branches led to merge conflicts which were quite hard to solve. After some trial-and-error, we now feel more confident working with git. \\ 
+While starting out, we had a hard time figuring out the implementation of our emulator and memory. We divided the work among ourselves, but soon realized that we would have to get together and decide hwo to implement the processor's memory in C. Consequently, we came up with a working design and the three-stage pipeline before continuing to work individually. With the core of the program in place, we were then able to work faster and more efficiently, which allowed us to work on implementation and debugging together. 
+\subsection*{2.1 Adapting to future tasks}
+For future tasks, we plan on discussing the basic design before dividing the work between ourselves. We expect it to be easier to get started considering that we already have a working basic implementation, and are now more experienced working with gitlab. In addition to these changes, we want to take more advantage of third-party software such as Valgrind and DynamoRIO and work with the terminal and the command line more often in case that we run into any difficulties with CLion. Especially for testing our code, we are trying to get more accustomed to writing our own Makefiles.
+
+
+
+\section*{}
+
+\section*{3. Emulator implementation}
+Our initial idea to implement the processor was to have a struct with arrays of \verb|uint32_t| to represent the memory and registers, and several other data members to represent instructions and flags. \\ \\
+We made the decision to work with \verb|uint32_t| as we were to deal with 32-bit instructions, which have been implemented as a standalone struct. The struct \verb|instructions| contains a number of \verb|uint8_t| data members to represent registers, conditions and OPCodes, \verb|uint16_t| data members to represent immediate values and operands, \verb|bool| data members to represent flags, and a single \verb|uint32_t| to represent the offset. Each object of type \verb|instructions| has an \verb|intruction_type| which is an enumerated data type which indicates the type of instructions (\verb|Halt, Branch, Mult, SDT, DProc| or \verb|None|). \\
+
+After a meeting with our supervisor, we realized it would be much more efficient to have separate structs for the CPU part (registers et al) and the memory (\verb|uint32_t memory[16384]|), and then as data members of an all encompassing third struct, \verb|MACHINE|. As it stands, this is implementation we're working with: 
+
+\begin{lstlisting} 
+typedef struct{
+    uint32_t memoryAlloc[16384];
+} MEMORY;
+
+typedef struct{
+    uint32_t registers[17];
+    uint32_t fetchedInstruction;
+    instructions *decodedInstruction;
+} CPU;
+
+typedef struct {
+    MEMORY mem;
+    CPU c ;
+} MACHINE;
+
+\end{lstlisting}
+
+
+\subsubsection*{3.1 Reusable Parts}
+
+Although our assembler is not fully implemented yet, we expect to reuse code from our \verb|binaryloader.c|, which contains the function \verb|void loadFile (char *fname,| \verb|uint32_t *memory)|. This function takes a character pointer \verb|fname| and a \verb|uint32_t| pointer as arguments, loads the file stored where \verb|*fname| is pointed at, extracts information, and stores it where \verb|memory| points to. \\
+Apart from this, we plan on using the files \verb|usefulTools.h| and \verb|instructions.h| as well as some implementations from the \verb|usefulFuncs.c| file, such as \verb|void bswap_32(uint32_t value)| from \verb|byteswap.h| which swaps the bytes of a 32-bit integer - used in converting between big-endian and little-endian forms.
+
+
+\section*{}
+
+\section*{4. Possible roadblocks}
+As none of us have worked with a Raspberry Pi before, Part-3 might be a difficult task. Interfacing our code with the hardware is another challenge we expect to face, but some of us having experience with Arduinos might be of help in the upcoming tasks.\\
+
+We have started collecting ideas for the extension, but have not settled on any one idea. Deciding on the best idea while keeping in mind the limited time may prove to be another challenge. \\
+Aside from that, we ran into problems with debugging our code and using CLion as our IDE.
+\subsection*{4.1 Solutions planned}
+
+In order to avoid relying on CLion too heavily, we started writing our own Makefiles, and all agreed upon what settings to work with within CLion. As for debugging, we plan to make extensive use of Valgrind and gdb, as opposed to the rudimentary debugging we carried out so far with printf statements and assertions. \\
+Furthermore, we found some helpful sources, e.g. tutorials on YouTube, that might improve our understanding of the working of a Raspberry Pi. \\
+Considering the extension of our project, we decided to have a group meeting where we will weigh the pros and cons of each idea for the extension, and make sure that we decide upon something that is in line with our limited experience in C and feasible within the given time frame.
+
+
+
+
+
+
+
+
+
+
+
+\end{document}
