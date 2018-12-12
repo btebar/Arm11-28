@@ -2,15 +2,13 @@
 #define ARM11_28_CELL_H
 #include <stdbool.h>
 
-enum status{ON, OFF};
+enum status{OFF = 0, ON = 1};
 
 typedef struct{
     enum status s;
 } cell;
 
 void flipCell(cell *);
-
-bool alive(cell *);
 
 const char *symbol(cell);
 #endif //ARM11_28_CELL_H

@@ -12,9 +12,9 @@
 typedef struct { //checked
     instruction_type type;
     int cond;
-    uint32_t opcode;
+    word_t opcode;
 
-    uint32_t offset;
+    word_t offset;
 
     //registers
     int Rn;
@@ -31,14 +31,14 @@ typedef struct { //checked
     bool U;
 
     //immediate value
-    uint32_t immediateValue;
+    word_t immediateValue;
 
     //operand2
-    uint32_t operand2;
+    word_t operand2;
 
-    uint32_t carry;
+    word_t carry;
     SHIFT_CODE shift;
-    uint32_t binary;
+    word_t binary;
 } instructions;
 
 #endif //C_CODE_EXECUTE_H

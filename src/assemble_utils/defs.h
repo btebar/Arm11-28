@@ -49,11 +49,13 @@ uint32_t getOp2(int32_t);
 
 int32_t convertToWriteableFormat(char*);
 
-uint32_t *lsl(instruction);
+uint32_t *lslFunc(instruction);
 
 bool checkIfImmediate(char*);
 
 uint32_t shiftOperand(char*, char*, char*);
 
 uint16_t textToInt(char*);
+
+char *removeSpaces(char*);
 #endif //ARM11_28_DEFS_H

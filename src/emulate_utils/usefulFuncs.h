@@ -4,7 +4,7 @@
 
 #include "../memoryImplementation.h"
 
-uint32_t getBitRange(uint32_t instruction, int start, int length);
+word_t getBitRange(word_t instruction, int start, int length);
 
 void exitProgr(MACHINE *machine);
 

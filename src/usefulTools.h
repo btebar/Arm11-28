@@ -15,7 +15,36 @@
 #define I_MASK_32 0x02000000
 #define C_MASK_32 0x20000000
 #define N_MASK_32 0x80000000
+#define MEM_BOUNDS 65536
+#define BYTES_2 16
+#define BYTE_1 8
+#define BYTES_3 24
+#define OTHERSIDE 31
+#define Nposition 28
+#define BYTES_4 32
+#define sizeReg 4
+#define Rnbit 16
+#define Rdbit 12
+#define RnbitMul 12
+#define RdbitMul 16
+#define RmbitMul 0
+#define RsbitMul 8
+#define sizeOffset 12
+#define condBits 28
+#define sizeopcode 4
+#define OpcodeBit 21
+#define Cbit 29
+#define Vbit 28
+#define Zbit 30
+#define Nbit 31
+#define bits_4 4
 
+#define Ibit 25
+#define Sbit 20
+#define Pbit 24
+#define Ubit 23
+#define Lbit 20
+#define Abit 21
 
 typedef enum {
     EQ = 0,
@@ -55,6 +84,10 @@ typedef enum {
     ASR = 10,
     ROR = 11,
 } SHIFT_CODE;
+
+typedef uint32_t word_t;
+typedef int cond;
+
 
 
 

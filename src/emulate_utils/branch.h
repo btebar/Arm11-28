@@ -4,7 +4,7 @@
 #include "../memoryImplementation.h"
 #include <stdint.h>
 
-void branch(uint32_t, MACHINE*);
+void branch(word_t, MACHINE*);
 
 
 #endif //ARM11_28_BRANCH_H

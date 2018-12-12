@@ -7,6 +7,6 @@
 #include "usefulFuncs.h"
 
 
-void multiply(uint32_t , MACHINE* );
+void multiply(word_t , MACHINE* );
 
 #endif //ARM11_28_MULTIPLY_H

@@ -3,5 +3,5 @@
 
 #include "usefulFuncs.h"
 
-void decodeDATPROC(uint32_t , MACHINE* );
+void decodeDATPROC(word_t , MACHINE* );
 #endif //ARM11_28_DATAPROCDEC_H

@@ -8,5 +8,5 @@
 #include <assert.h>
 #include "usefulFuncs.h"
 
-void SDTdecode(uint32_t, MACHINE* );
+void SDTdecode(word_t, MACHINE* );
 #endif //ARM11_28_SINGLEDT_H

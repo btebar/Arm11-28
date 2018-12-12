@@ -3,7 +3,7 @@
 #include "cell.h"
 
 cell **setupGrid(int width, int height) {
-    cell **matrix = malloc(width * sizeof(cell *));
+    cell **matrix = malloc(height * sizeof(cell *));
 
     if (!matrix) {
         return NULL;
@@ -14,15 +14,15 @@ cell **setupGrid(int width, int height) {
     if (!matrix[0]) {
         free(matrix);
         return NULL;
-    }
+    } //Failed
 
-    for (int i = 1; i < width; i++) {
-        matrix[i] = matrix[i - 1] + height;
+    for (int i = 1; i < height; i++) {
+        matrix[i] = matrix[i - 1] + width;
     }
 
     //Initialise grid to all OFF
-    for (int i = 0; i < width; i++) {
-        for (int j = 0; j < height; j++) {
+    for (int i = 0; i < height; i++) {
+        for (int j = 0; j < width; j++) {
             matrix[i][j].s = OFF;
         }
     }
@@ -30,46 +30,68 @@ cell **setupGrid(int width, int height) {
     return matrix;
 }
 
-void freeMatrix(cell **matrix) {
-    free(matrix[0]);
-    free(matrix);
-}
-
-void evolve(screen grid, int width, int height) {
-    for (int i = 0; i < width; i++) {
-        for (int j = 0; j < height; j++) {
-            evaluateCell(grid, i, j, width, height);
+void resetGrid(cell **board, int width, int height) {
+    for (int i = 0; i < height; i++) {
+        for (int j = 0; j < width; j++) {
+            board[i][j].s = OFF;
         }
     }
 }
 
-void evaluateCell(screen grid, int x, int y, int width, int height) {
+int countNeighbours(cell **board, int row, int col, int width, int height) {
     //Count number of neighbours
     int neighbours = 0;
 
     //Check surrounding cells
-    for (int i = -1; i <= 1; i++) {
-        for (int j = -1; j <= 1; j++) {
-            //If not this cell
-            if (!((x + i) < 0 || (x + i) >= width || (y + j) < 0 || (y + j) >= height)){
-                if (!(i == 0 && j == 0)) {
-                    if (grid.board[x + i][y + j].s == ON) {
-                        neighbours += 1;
-                    }
+    for (int i = -1; i < 2; i++) {
+        for (int j = -1; j < 2; j++) {
+            //Eliminate bordering issues to each edge can see the other side
+            int nCol = (col + j + width) % width;
+            int nRow = (row + i + height) % height;
+            //Add 1 if neighbour is ON, 0 if OFF
+            neighbours += board[nRow][nCol].s;
+        }
+    }
+
+    //Remove value of this cell as counted neighbour
+    neighbours -= board[row][col].s;
+
+    return neighbours;
+}
+
+
+void evolve(cell **grid, int width, int height) {
+    //Create a new copy of the board
+    cell **new_grid = setupGrid(width, height);
+    copyGrid(grid, new_grid, width, height);
+
+    for (int i = 0; i < height; i++) {
+        for (int j = 0; j < width; j++) {
+            int neighbours = countNeighbours(grid, i , j, width, height);
+            cell *grid_ptr = &grid[i][j];
+            cell *new_ptr = &new_grid[i][j];
+
+            if (grid_ptr->s == ON) {
+                if (neighbours < 2 || neighbours > 3) {
+                    flipCell(new_ptr);
+                }
+            } else {
+                if (neighbours == 3) {
+                    flipCell(new_ptr);
                 }
             }
         }
     }
 
-    cell *cell_ptr = &grid.board[x][y];
+    //Update original grid to new grid
+    copyGrid(new_grid, grid, width, height);
+}
 
-    if (cell_ptr->s == ON) {
-        if (neighbours < 2 || neighbours > 3) {
-            flipCell(cell_ptr);
-        }
-    } else {
-        if (neighbours == 3) {
-            flipCell(cell_ptr);
+void copyGrid(cell **grid, cell **new_grid, int width, int height) {
+    //Copy over values from one grid to another without altering addresses
+    for (int i = 0; i < height; i++) {
+        for (int j = 0; j < width; j++) {
+            new_grid[i][j].s = grid[i][j].s;
         }
     }
 }

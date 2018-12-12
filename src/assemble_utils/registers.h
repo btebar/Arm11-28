@@ -1,7 +1,3 @@
-//
-// Created by nahida on 6/6/18.
-//
-
 #ifndef ARM11_28_REGISTERS_H
 #define ARM11_28_REGISTERS_H
 #include<stdint.h>
@@ -76,7 +72,5 @@ if(!strcmp(reg, "r16")){
 }
 return regstr;
 }
-
-
 
 #endif //ARM11_28_REGISTERS_H
